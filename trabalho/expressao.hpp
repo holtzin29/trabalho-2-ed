@@ -39,8 +39,15 @@ bool verificarSintaxe(string &expressao)
         {
             if (!esperaOperando)
             {
-                liberar(pilha);
-                return false; // abertura depois de operando sem operador
+                // permite multiplicação implícita (ex: 3(a+b))
+                char anterior = expressao[i - 1];
+                if (!(verificarNumero(anterior) ||
+                      verificarVariavel(anterior) ||
+                      verificarFechar(anterior)))
+                {
+                    liberar(pilha);
+                    return false;
+                }
             }
             push(pilha, caracter);
         }
@@ -91,15 +98,6 @@ bool verificarSintaxe(string &expressao)
             i--; // voltar um passo pois o for ja vai incrementar dnv
             esperaOperando = false;
             temOperando = true;
-            
-            // Verificar se próximo é variável para multiplicação implícita (ex: 3a)
-            int j = i + 1;
-            while (j < tamanhoExpressao && verificarEspaco(expressao[j]))
-                j++;
-            if (j < tamanhoExpressao && verificarVariavel(expressao[j]))
-            {
-                esperaOperando = true; // permite que a variável seja lida como operando
-            }
         }
         else if (verificarVariavel(caracter))
         {
@@ -110,15 +108,6 @@ bool verificarSintaxe(string &expressao)
             }
             esperaOperando = false;
             temOperando = true;
-            
-            // Verificar se próximo é número para multiplicação implícita (ex: a5)
-            int j = i + 1;
-            while (j < tamanhoExpressao && verificarEspaco(expressao[j]))
-                j++;
-            if (j < tamanhoExpressao && verificarNumero(expressao[j]))
-            {
-                esperaOperando = true; // permite que o número seja lido como operando
-            }
         }
     }
 
@@ -174,7 +163,7 @@ void tiraTokens(string &expressao, Fila<Token> &tokens)
         {
             Token multiplicacao;
             multiplicacao.tipo = 'O';
-            multiplicacao.valor = '*';
+            multiplicacao.valor = "*";
             queue(tokens, multiplicacao);
         }
 
@@ -195,28 +184,28 @@ void tiraTokens(string &expressao, Fila<Token> &tokens)
         else if (verificarVariavel(caracter))
         {
             token.tipo = 'V';
-            token.valor = caracter;
+            token.valor = string(1, caracter);
             queue(tokens, token);
             ultimoToken = token;
         }
         else if (verificarOperador(caracter))
         {
             token.tipo = 'O'; // +, -, *, /
-            token.valor = caracter;
+            token.valor = string(1, caracter);
             queue(tokens, token);
             ultimoToken = token;
         }
         else if (verificarAbrir(caracter))
         {
             token.tipo = 'A'; // parenteses, colchetes, chaves
-            token.valor = caracter;
+            token.valor = string(1, caracter);
             queue(tokens, token);
             ultimoToken = token;
         }
         else if (verificarFechar(caracter))
         {
             token.tipo = 'F'; // parenteses, colchetes, chaves
-            token.valor = caracter;
+            token.valor = string(1, caracter);
             queue(tokens, token);
             ultimoToken = token;
         }
