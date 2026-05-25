@@ -9,11 +9,17 @@ Mauro Grippa Junior
 */
 #include <iostream>
 
+// =========================================================================
+// SÓ MEXA AQUI PARA TESTAR OUTRAS ESTRUTURAS:
+// Descomente o par que deseja testar e comente o outro.
+// =========================================================================
 // #include "../pilhas/pilhaestatica.hpp"
 // #include "../filas/filaestatica.hpp"
 // #include "../filas/filacircular.hpp"
+
 #include "../pilhas/pilhadinamica.hpp"
 #include "../filas/filadinamica.hpp"
+// =========================================================================
 
 #include "expressao.hpp"
 #include "utilitarios.hpp"
@@ -26,6 +32,8 @@ void limparTela()
     system("clear");
 }
 
+// 1. Transformamos o menu em template para receber as estruturas escolhidas no main
+template <typename TPilhaChar, typename TFilaToken>
 void menu()
 {
     limparTela();
@@ -70,7 +78,8 @@ void menu()
 
             verificarVariaveis(expressao, temA, temB, temC);
 
-            if (verificarSintaxe(expressao))
+            // 2. Informa qual tipo de pilha usar na checagem de sintaxe
+            if (verificarSintaxe<TPilhaChar>(expressao))
             {
                 cout << "Expressao valida!" << endl;
             }
@@ -136,7 +145,8 @@ void menu()
                 char variaveis[3] = {'a', 'b', 'c'};
                 double valores[3] = {a, b, c};
 
-                float valorFinal = calcular(
+                // 3. O cálculo usa uma Pilha de double. Passamos a estrutura genérica Pilha<double>
+                float valorFinal = calcular<Pilha<double>>(
                     expressaoPolonesa,
                     variaveis,
                     valores,
@@ -153,7 +163,8 @@ void menu()
 
         case 6:
 
-            expressaoPolonesa = converterPraPolenesa(expressao);
+            // 4. A conversão precisa saber qual Pilha e qual Fila utilizar no processo
+            expressaoPolonesa = converterPraPolenesa<TPilhaChar, TFilaToken>(expressao);
 
             cout << "Expressao em NPI: " << endl;
             cout << expressaoPolonesa << endl;
@@ -177,17 +188,10 @@ void menu()
 
 int main()
 {
-
-    Pilha<char> pilhaChar;
-    Fila<char> filaChar;
-
-    inicializar(pilhaChar);
-    inicializar(filaChar);
-
-    menu();
-
-    liberar(pilhaChar);
-    liberar(filaChar);
+    // 5. O menu agora inicia injetando os tipos definidos nos seus arquivos .hpp incluídos no topo
+    // Como os nomes das structs são padronizados como Pilha e Fila em todos os arquivos, 
+    // basta passar Pilha<char> e Fila<Token>.
+    menu<Pilha<char>, Fila<Token>>();
 
     return 0;
 }
