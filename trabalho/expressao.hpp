@@ -91,6 +91,15 @@ bool verificarSintaxe(string &expressao)
             i--; // voltar um passo pois o for vai incrementar
             esperaOperando = false;
             temOperando = true;
+            
+            // Verificar se próximo é variável para multiplicação implícita (ex: 3a)
+            int j = i + 1;
+            while (j < tamanhoExpressao && verificarEspaco(expressao[j]))
+                j++;
+            if (j < tamanhoExpressao && verificarVariavel(expressao[j]))
+            {
+                esperaOperando = true; // permite que a variável seja lida como operando
+            }
         }
         else if (verificarVariavel(caracter))
         {
@@ -101,6 +110,15 @@ bool verificarSintaxe(string &expressao)
             }
             esperaOperando = false;
             temOperando = true;
+            
+            // Verificar se próximo é número para multiplicação implícita (ex: a5)
+            int j = i + 1;
+            while (j < tamanhoExpressao && verificarEspaco(expressao[j]))
+                j++;
+            if (j < tamanhoExpressao && verificarNumero(expressao[j]))
+            {
+                esperaOperando = true; // permite que o número seja lido como operando
+            }
         }
     }
 
@@ -125,6 +143,8 @@ struct Token
 void tiraTokens(string &expressao, Fila<Token> &tokens)
 {
     int tamanhoExpressao = expressao.length();
+    Token ultimoToken;
+    ultimoToken.tipo = '\0'; // inicializa como vazio
 
     for (int i = 0; i < tamanhoExpressao; i++)
     {
@@ -134,6 +154,30 @@ void tiraTokens(string &expressao, Fila<Token> &tokens)
             continue;
 
         Token token;
+        bool precisaInserirMultiplicacao = false;
+
+        // Verifica se precisa inserir multiplicação implícita
+        if ((ultimoToken.tipo == 'N' || ultimoToken.tipo == 'V') && (verificarNumero(caracter) || verificarVariavel(caracter)))
+        {
+            precisaInserirMultiplicacao = true;
+        }
+        else if (ultimoToken.tipo == 'F' && (verificarNumero(caracter) || verificarVariavel(caracter) || verificarAbrir(caracter)))
+        {
+            precisaInserirMultiplicacao = true;
+        }
+        else if ((ultimoToken.tipo == 'N' || ultimoToken.tipo == 'V') && verificarAbrir(caracter))
+        {
+            precisaInserirMultiplicacao = true;
+        }
+
+        if (precisaInserirMultiplicacao)
+        {
+            Token multiplicacao;
+            multiplicacao.tipo = 'O';
+            multiplicacao.valor = '*';
+            queue(tokens, multiplicacao);
+        }
+
         if (verificarNumero(caracter))
         {
             string numero = "";
@@ -146,30 +190,35 @@ void tiraTokens(string &expressao, Fila<Token> &tokens)
             token.tipo = 'N'; // numero
             token.valor = numero;
             queue(tokens, token);
+            ultimoToken = token;
         }
         else if (verificarVariavel(caracter))
         {
             token.tipo = 'V';
             token.valor = caracter;
             queue(tokens, token);
+            ultimoToken = token;
         }
         else if (verificarOperador(caracter))
         {
             token.tipo = 'O'; // +, -, *, /
             token.valor = caracter;
             queue(tokens, token);
+            ultimoToken = token;
         }
         else if (verificarAbrir(caracter))
         {
             token.tipo = 'A'; // parenteses, colchetes, chaves
             token.valor = caracter;
             queue(tokens, token);
+            ultimoToken = token;
         }
         else if (verificarFechar(caracter))
         {
             token.tipo = 'F'; // parenteses, colchetes, chaves
             token.valor = caracter;
             queue(tokens, token);
+            ultimoToken = token;
         }
     }
 }
@@ -190,7 +239,7 @@ string converterPraPolenesa(string &expressao)
 
     while (!vazia(tokens))
     {
-        Token token; // dequeue pede pra um valor T por referencia entao colocamos um aqui
+        Token token; // dequeue pede pra um valor T por referencia entao colocamos um aqui e token recebe o valor do inicio
         dequeue(tokens, token);
 
         if (token.tipo == 'N' || token.tipo == 'V')
