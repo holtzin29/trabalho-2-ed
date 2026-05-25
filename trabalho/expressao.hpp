@@ -62,10 +62,10 @@ bool verificarSintaxe(string &expressao)
             if (!corresponde(topo, caracter))
             {
                 liberar(pilha);
-                return false; // delimitadores incompativeis
+                return false; // delimitadores nao correspondem
             }
             char esquece;
-            pop(pilha, esquece);
+            pop(pilha, esquece); // se passou todos os ifs podemos dar um pop pra deixar a pilha vazia
         }
         else if (verificarOperador(caracter))
         {
@@ -84,11 +84,11 @@ bool verificarSintaxe(string &expressao)
                 return false; // operando apos operando
             }
             // acumular todos os dígitos
-            while (i < tamanhoExpressao && verificarNumero(expressao[i]))
+            while (i < tamanhoExpressao && verificarNumero(expressao[i])) // usamos o mesmo i do for 
             {
                 i++;
             }
-            i--; // voltar um passo pois o for vai incrementar
+            i--; // voltar um passo pois o for ja vai incrementar dnv
             esperaOperando = false;
             temOperando = true;
             
@@ -253,7 +253,7 @@ string converterPraPolenesa(string &expressao)
             {
                 char topo;
                 top(operadores, topo);
-
+                // esse if gigante aqui e pra prioridade dos operadores ^ (expoente) que tem prioridade pela direita ->
                 if (!(verificarAbrir(topo)) && (prioridade(topo) > prioridade(token.valor[0]) || (prioridade(topo) == prioridade(token.valor[0]) && token.valor[0] != '^')))
                 {
                     resultado += topo;
