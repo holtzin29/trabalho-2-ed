@@ -1,3 +1,6 @@
+#pragma once
+#ifndef FILA_ESTATICA_HPP
+#define FILA_ESTATICA_HPP
 #ifndef TAM
 #define TAM 50
 #endif
@@ -43,3 +46,5 @@ bool dequeue(Fila <T> &f, T &valor){
 template <typename T>
 void liberar(Fila <T> f){
 }
+
+#endif

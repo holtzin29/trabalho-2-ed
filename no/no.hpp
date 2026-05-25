@@ -1,3 +1,4 @@
+#pragma once
 #ifndef NO_HPP
 #define NO_HPP
 

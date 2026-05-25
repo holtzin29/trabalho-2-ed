@@ -1,3 +1,6 @@
+#pragma once
+#ifndef PILHA_ESTATICA_HPP
+#define PILHA_ESTATICA_HPP
 #ifndef TAM
 #define TAM 50
 #endif
@@ -49,3 +52,5 @@ bool top(Pilha <T> &p, T &valor){
 template <typename T>
 void liberar(Pilha <T> p){
 }
+
+#endif

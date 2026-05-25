@@ -1,3 +1,6 @@
+#pragma once
+#ifndef FILA_CIRCULAR_HPP
+#define FILA_CIRCULAR_HPP
 #ifndef TAM
 #define TAM 50
 #endif
@@ -48,3 +51,5 @@ bool dequeue(Fila <T> &f, T &valor){
 template <typename T>
 void liberar(Fila <T> f){
 }
+
+#endif

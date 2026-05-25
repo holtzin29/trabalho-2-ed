@@ -9,11 +9,11 @@ Mauro Grippa Junior
 */
 #include <iostream>
 
-// #include "../pilhas/pilhaestatica.hpp"
-// #include "../filas/filaestatica.hpp"
+ #include "../pilhas/pilhaestatica.hpp"
+#include "../filas/filaestatica.hpp"
 // #include "../filas/filacircular.hpp"
-#include "../pilhas/pilhadinamica.hpp"
-#include "../filas/filadinamica.hpp"
+// #include "../pilhas/pilhadinamica.hpp"
+// #include "../filas/filadinamica.hpp"
 
 #include "expressao.hpp"
 #include "utilitarios.hpp"
@@ -177,17 +177,6 @@ void menu()
 
 int main()
 {
-
-    Pilha<char> pilhaChar;
-    Fila<char> filaChar;
-
-    inicializar(pilhaChar);
-    inicializar(filaChar);
-
     menu();
-
-    liberar(pilhaChar);
-    liberar(filaChar);
-
     return 0;
 }

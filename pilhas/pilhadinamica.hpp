@@ -1,3 +1,4 @@
+#pragma once
 #ifndef PILHA_DINAMICA_HPP
 #define PILHA_DINAMICA_HPP
 

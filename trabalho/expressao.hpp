@@ -6,8 +6,11 @@
 #define EXPRESSAO_HPP
 #include <iostream>
 #include "./utilitarios.hpp"
-#include "../pilhas/pilhadinamica.hpp"
-#include "../filas/filadinamica.hpp"
+// #include "../pilhas/pilhadinamica.hpp"
+// #include "../filas/filadinamica.hpp"
+ #include "../pilhas/pilhaestatica.hpp"
+ #include "../filas/filaestatica.hpp"
+// #include "../filas/filacircular.hpp"
 using namespace std;
 
 // o usuario digitou uma expressao -> string
