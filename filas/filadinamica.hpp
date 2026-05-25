@@ -51,20 +51,18 @@ bool dequeue(Fila <T> &f, T &valor){
     if( vazia(f) ) return false;
 
     No <T> *aux = f.comeco;
-    if( aux == NULL ) return false;
     valor = aux->info;
 
-    if( aux == f.comeco && aux == f.fim  ){
+    if( f.comeco == f.fim ){
         f.comeco = NULL;
         f.fim = NULL;
     }
-    else {
-        f.comeco = aux->eloP;
+    else { 
+        f.comeco = f.comeco->eloP;
         f.comeco->eloA = NULL;
     }
     delete aux;
     return true;
-
 }
 
 template <typename T>
